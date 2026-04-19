@@ -3,13 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Victor H Mansilla Tamaro - Plan de Entrenamiento IA 2025</title>
+<title>GimnasioRutina — Viti 2025</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0D1B40">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gym Viti">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#F1F5F9;color:#1E293B}
-.topbar{background:#0D1B40;padding:16px 20px}
-.topbar h1{color:#fff;font-size:16px;font-weight:700;line-height:1.3}
-.topbar p{color:#B8D4F0;font-size:10px;margin-top:3px}
+
+/* LOGIN */
+#login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px;background:#0D1B40}
+#login-screen h1{color:#fff;font-size:22px;font-weight:700;margin-bottom:6px;text-align:center}
+#login-screen p{color:#B8D4F0;font-size:12px;margin-bottom:40px;text-align:center}
+.google-btn{display:flex;align-items:center;gap:12px;background:#fff;color:#1E293B;border:none;border-radius:10px;padding:14px 24px;font-size:14px;font-weight:600;cursor:pointer;width:100%;max-width:320px;justify-content:center}
+.google-btn:hover{background:#f0f0f0}
+.google-btn svg{width:20px;height:20px;flex-shrink:0}
+.login-footer{color:#475569;font-size:10px;margin-top:24px;text-align:center}
+
+/* APP */
+#app-screen{display:none}
+.topbar{background:#0D1B40;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.topbar-left h1{color:#fff;font-size:14px;font-weight:700}
+.topbar-left p{color:#B8D4F0;font-size:10px;margin-top:2px}
+.user-area{display:flex;align-items:center;gap:8px}
+.user-avatar{width:30px;height:30px;border-radius:50%;border:2px solid #00A8E8}
+.btn-logout{background:none;border:1px solid #475569;color:#B8D4F0;border-radius:6px;padding:4px 10px;font-size:10px;cursor:pointer}
+.btn-logout:hover{border-color:#00A8E8;color:#fff}
 .nav{display:flex;background:#0D1B40;border-top:1px solid #1e3a6e;overflow-x:auto}
 .nav-btn{padding:10px 14px;font-size:12px;font-weight:500;color:#B8D4F0;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;user-select:none;flex-shrink:0}
 .nav-btn.active{color:#fff;border-bottom-color:#00A8E8}
@@ -43,540 +64,614 @@ body{font-family:Arial,sans-serif;background:#F1F5F9;color:#1E293B}
 .series-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}
 .series-label{font-size:10px;color:#64748B;min-width:42px}
 .series-input{width:72px;font-size:12px;padding:5px 8px;border:.5px solid #CBD5E1;border-radius:6px;text-align:center}
+.series-input:focus{outline:none;border-color:#185FA5}
 .nota-input{width:100%;font-size:11px;padding:5px 8px;border:.5px solid #E2E8F0;border-radius:6px;color:#64748B;margin-top:4px}
 .reg-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
 .reg-header select,.reg-header input[type=date]{font-size:13px;padding:8px 10px;border:0.5px solid #CBD5E1;border-radius:8px;background:#fff;color:#1E293B}
 .btn-save{background:#185FA5;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:12px;font-weight:700;cursor:pointer}
+.btn-save:disabled{opacity:.5;cursor:not-allowed}
 .btn-clear{background:#fff;color:#E24B4A;border:0.5px solid #E24B4A;border-radius:8px;padding:9px 14px;font-size:12px;font-weight:600;cursor:pointer}
 .hist-entry{background:#fff;border:.5px solid #E2E8F0;border-radius:10px;padding:12px 14px;margin-bottom:10px}
 .hist-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .hist-dia{font-size:12px;font-weight:700;color:#0D1B40}
-.hist-fecha{font-size:10px;color:#94A3B8}
 .hist-ej{font-size:11px;color:#475569;margin-bottom:4px;line-height:1.5}
 .hist-ej strong{color:#185FA5}
 .btn-del{background:none;border:none;color:#E24B4A;font-size:11px;cursor:pointer;padding:2px 6px}
 .empty{text-align:center;color:#94A3B8;font-size:13px;padding:40px 0}
 .info-box{background:#E6F1FB;border-radius:10px;padding:12px 14px;font-size:11px;color:#0C447C;margin-bottom:16px;line-height:1.6}
+.sync-badge{font-size:9px;padding:2px 8px;border-radius:20px;margin-left:8px}
+.sync-ok{background:#E1F5EE;color:#085041}
+.sync-err{background:#FCEBEB;color:#A32D2D}
 footer{font-size:10px;color:#94A3B8;text-align:center;padding:16px 0 28px;line-height:1.8}
 </style>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0D1B40">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Gym Viti">
 </head>
 <body>
 
-<div class="topbar">
-  <h1>Victor H Mansilla Tamaro — Plan de Entrenamiento IA 2025</h1>
-  <p>42 años · 2 días/semana · Fuerza y mantenimiento</p>
-</div>
-<div class="nav">
-  <div class="nav-btn active" onclick="showPage('guia-a',this)">Día A — Lunes</div>
-  <div class="nav-btn" onclick="showPage('guia-b',this)">Día B — Viernes</div>
-  <div class="nav-btn" onclick="showPage('registro',this)">Registrar sesión</div>
-  <div class="nav-btn" onclick="showPage('historial',this)">Historial</div>
-</div>
-
-<!-- SVG MUSCULARES reutilizables como templates -->
-<svg style="display:none">
-  <defs>
-    <!-- Silueta cuerpo frontal base -->
-    <g id="body-front">
-      <!-- cabeza -->
-      <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
-      <!-- cuello -->
-      <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
-      <!-- torso -->
-      <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
-      <!-- hombro izq -->
-      <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
-      <!-- hombro der -->
-      <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
-      <!-- brazo sup izq -->
-      <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
-      <!-- brazo sup der -->
-      <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
-      <!-- antebrazo izq -->
-      <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
-      <!-- antebrazo der -->
-      <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
-      <!-- muslo izq -->
-      <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
-      <!-- muslo der -->
-      <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
-      <!-- pierna inf izq -->
-      <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
-      <!-- pierna inf der -->
-      <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
-    </g>
-
-    <!-- Silueta cuerpo posterior base -->
-    <g id="body-back">
-      <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
-      <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
-      <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
-      <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
-      <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
-      <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
-      <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
-      <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
-      <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
-      <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
-      <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
-      <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
-      <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
-    </g>
-  </defs>
-</svg>
-
 <!-- ═══════════════════════════════ -->
-<!-- DÍA A -->
+<!-- LOGIN -->
 <!-- ═══════════════════════════════ -->
-<div id="guia-a" class="page active">
-<div class="sec-label">Día A — Lunes · Push + Tracción vertical + Core</div>
-<div class="grid">
-
-<!-- 1. DOMINADAS -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <!-- cuerpo posterior -->
-      <use href="#body-back"/>
-      <!-- dorsal izq destacado -->
-      <path d="M38,45 Q28,55 30,80 Q35,88 46,90 L46,55 Z" fill="#e03030" opacity=".9"/>
-      <!-- dorsal der destacado -->
-      <path d="M82,45 Q92,55 90,80 Q85,88 74,90 L74,55 Z" fill="#e03030" opacity=".9"/>
-      <!-- romboides / trapecio medio -->
-      <path d="M44,38 Q60,42 76,38 Q72,52 60,55 Q48,52 44,38 Z" fill="#c02020" opacity=".85"/>
-      <!-- bíceps izq secundario -->
-      <path d="M18,50 Q14,58 15,68 L22,68 Q24,58 28,50 Z" fill="#e03030" opacity=".5"/>
-      <!-- bíceps der secundario -->
-      <path d="M102,50 Q106,58 105,68 L98,68 Q96,58 92,50 Z" fill="#e03030" opacity=".5"/>
-      <!-- label -->
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">dorsal · romboides</text>
+<div id="login-screen">
+  <h1>GimnasioRutina</h1>
+  <p>Victor H Mansilla Tamaro · Plan IA 2025</p>
+  <button class="google-btn" onclick="loginGoogle()">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
     </svg>
-  </div>
-  <div class="card-inner">
-    <div class="card-name">Dominadas</div>
-    <div class="badges"><span class="badge bab">Día A + B</span><span class="badge btipo">Tracción vertical</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Dorsal ancho, romboides<br><strong>Secundario:</strong> Bíceps, core</div>
-    <div class="tip">Rango completo. Pausa 1 seg arriba. Sin balanceo.</div>
-    <div class="peso">3 × 6–10 · Peso corporal</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=UT57qqp3zF8" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
-  </div>
-</div>
-
-<!-- 2. PRESS PECHO -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <use href="#body-front"/>
-      <!-- pectoral izq -->
-      <path d="M38,35 Q30,40 30,58 Q38,62 55,60 L55,35 Z" fill="#e03030" opacity=".9"/>
-      <!-- pectoral der -->
-      <path d="M82,35 Q90,40 90,58 Q82,62 65,60 L65,35 Z" fill="#e03030" opacity=".9"/>
-      <!-- deltoides anterior izq secundario -->
-      <ellipse cx="27" cy="38" rx="8" ry="10" fill="#e03030" opacity=".45"/>
-      <!-- deltoides anterior der secundario -->
-      <ellipse cx="93" cy="38" rx="8" ry="10" fill="#e03030" opacity=".45"/>
-      <!-- triceps secundario izq (parte trasera no visible, insinuado) -->
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">pectoral mayor</text>
-    </svg>
-  </div>
-  <div class="card-inner">
-    <div class="card-name">Press de pecho en máquina</div>
-    <div class="badges"><span class="badge ba">Día A</span><span class="badge btipo">Empuje horizontal</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Pectoral mayor<br><strong>Secundario:</strong> Deltoides anterior, tríceps</div>
-    <div class="tip">Inspirá al bajar, expirá al empujar. No bloquees codos.</div>
-    <div class="peso">3 × 10–12 · 55 kg base</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=d-gwsl5BlMQ" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
-  </div>
-</div>
-
-<!-- 3. PRESS HOMBROS -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <use href="#body-front"/>
-      <!-- deltoides izq completo -->
-      <ellipse cx="27" cy="40" rx="10" ry="14" fill="#e03030" opacity=".9"/>
-      <!-- deltoides der completo -->
-      <ellipse cx="93" cy="40" rx="10" ry="14" fill="#e03030" opacity=".9"/>
-      <!-- trapecio superior -->
-      <path d="M44,28 Q60,24 76,28 Q72,36 60,38 Q48,36 44,28 Z" fill="#e03030" opacity=".7"/>
-      <!-- triceps izq secundario -->
-      <path d="M18,52 Q15,62 16,70 L22,70 Q23,62 26,52 Z" fill="#e03030" opacity=".4"/>
-      <!-- triceps der secundario -->
-      <path d="M102,52 Q105,62 104,70 L98,70 Q97,62 94,52 Z" fill="#e03030" opacity=".4"/>
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">deltoides anterior y medio</text>
-    </svg>
-  </div>
-  <div class="card-inner">
-    <div class="card-name">Press de hombros en máquina</div>
-    <div class="badges"><span class="badge ba">Día A</span><span class="badge btipo">Empuje vertical</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Deltoides anterior y medio<br><strong>Secundario:</strong> Tríceps, trapecio</div>
-    <div class="tip">No bloquees codos arriba. Control en la bajada.</div>
-    <div class="peso">3 × 10–12 · 30 kg base</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=279lKY6gi5o" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
-  </div>
-</div>
-
-<!-- 4. JALÓN AL PECHO -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <use href="#body-back"/>
-      <!-- dorsal izq -->
-      <path d="M38,45 Q28,58 30,82 Q36,88 46,88 L46,55 Z" fill="#e03030" opacity=".9"/>
-      <!-- dorsal der -->
-      <path d="M82,45 Q92,58 90,82 Q84,88 74,88 L74,55 Z" fill="#e03030" opacity=".9"/>
-      <!-- trapecio inferior -->
-      <path d="M46,55 Q60,60 74,55 Q70,72 60,75 Q50,72 46,55 Z" fill="#c02020" opacity=".75"/>
-      <!-- bíceps izq -->
-      <path d="M18,50 Q14,60 15,70 L22,70 Q24,60 28,50 Z" fill="#e03030" opacity=".6"/>
-      <!-- bíceps der -->
-      <path d="M102,50 Q106,60 105,70 L98,70 Q96,60 92,50 Z" fill="#e03030" opacity=".6"/>
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">dorsal · trapecio inf.</text>
-    </svg>
-  </div>
-  <div class="card-inner">
-    <div class="card-name">Jalón al pecho</div>
-    <div class="badges"><span class="badge ba">Día A</span><span class="badge btipo">Tracción vertical</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Dorsal ancho<br><strong>Secundario:</strong> Bíceps, romboides, trapecio inferior</div>
-    <div class="tip">Agarre neutro o supino. Escápulas abajo primero.</div>
-    <div class="peso">2 × 10–12 · 45 kg base</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=1JiNvChA0_Q" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
-  </div>
-</div>
-
-<!-- 5. CURL BÍCEPS -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <use href="#body-front"/>
-      <!-- bíceps izq destacado -->
-      <path d="M18,50 Q14,56 15,72 L22,72 Q24,56 28,50 Z" fill="#e03030" opacity=".9"/>
-      <!-- bíceps der destacado -->
-      <path d="M102,50 Q106,56 105,72 L98,72 Q96,56 92,50 Z" fill="#e03030" opacity=".9"/>
-      <!-- braquial / antebrazo izq secundario -->
-      <path d="M15,72 Q13,80 14,90 L21,90 Q22,80 22,72 Z" fill="#e03030" opacity=".45"/>
-      <!-- braquial / antebrazo der secundario -->
-      <path d="M105,72 Q107,80 106,90 L99,90 Q98,80 98,72 Z" fill="#e03030" opacity=".45"/>
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">bíceps braquial</text>
-    </svg>
-  </div>
-  <div class="card-inner">
-    <div class="card-name">Curl bíceps con mancuernas</div>
-    <div class="badges"><span class="badge ba">Día A</span><span class="badge btipo">Aislamiento</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Bíceps braquial<br><strong>Secundario:</strong> Braquial, braquiorradial</div>
-    <div class="tip">Alterno. No balancees el torso. Codo fijo.</div>
-    <div class="peso">2 × 10–12 · 9 kg por lado</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=MwhnGYwxkS0" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
-  </div>
-</div>
-
-<!-- 6. ABDOMINALES -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <use href="#body-front"/>
-      <!-- recto abdominal -->
-      <path d="M46,60 Q46,96 50,96 L70,96 Q74,96 74,60 Q66,64 60,64 Q54,64 46,60 Z" fill="#e03030" opacity=".9"/>
-      <!-- línea alba -->
-      <line x1="60" y1="62" x2="60" y2="96" stroke="#1a1a2e" stroke-width="1.5"/>
-      <!-- líneas transversales -->
-      <line x1="48" y1="72" x2="72" y2="72" stroke="#1a1a2e" stroke-width="1"/>
-      <line x1="47" y1="82" x2="73" y2="82" stroke="#1a1a2e" stroke-width="1"/>
-      <!-- oblicuos secundarios -->
-      <path d="M38,62 Q34,72 36,88 L46,85 L46,62 Z" fill="#e03030" opacity=".45"/>
-      <path d="M82,62 Q86,72 84,88 L74,85 L74,62 Z" fill="#e03030" opacity=".45"/>
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">recto abdominal · oblicuos</text>
-    </svg>
-  </div>
-  <div class="card-inner">
-    <div class="card-name">Abdominales (crunch)</div>
-    <div class="badges"><span class="badge ba">Día A</span><span class="badge btipo">Core</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Recto abdominal<br><strong>Secundario:</strong> Oblicuos, transverso abdominal</div>
-    <div class="tip">Movimiento controlado. No jalés el cuello. Exhalá al subir.</div>
-    <div class="peso">2–3 × 12–15</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=Xyd_fa5zoEU" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
-  </div>
-</div>
-
-<!-- 7. FACE PULL -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <use href="#body-back"/>
-      <!-- deltoides posterior izq -->
-      <path d="M17,35 Q14,42 18,52 Q22,54 30,48 Q30,36 26,33 Z" fill="#e03030" opacity=".9"/>
-      <!-- deltoides posterior der -->
-      <path d="M103,35 Q106,42 102,52 Q98,54 90,48 Q90,36 94,33 Z" fill="#e03030" opacity=".9"/>
-      <!-- trapecio medio -->
-      <path d="M44,35 Q60,38 76,35 Q74,48 60,52 Q46,48 44,35 Z" fill="#e03030" opacity=".85"/>
-      <!-- romboides -->
-      <path d="M48,52 Q60,56 72,52 Q70,62 60,65 Q50,62 48,52 Z" fill="#c02020" opacity=".7"/>
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">deltoides post. · trapecio</text>
-    </svg>
-  </div>
-  <div class="card-inner">
-    <div class="card-name">Face pull en polea (cuerda)</div>
-    <div class="badges"><span class="badge bab">Día A + B</span><span class="badge bprev">Prevención</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Deltoides posterior, trapecio medio<br><strong>Secundario:</strong> Manguito rotador, romboides</div>
-    <div class="tip">Polea alta con cuerda. Tirá hacia tu cara con codos abiertos.</div>
-    <div class="peso">2 × 15 · Peso liviano · Preventivo</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=MiCj0SB5xyg" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
-  </div>
-</div>
-
-</div>
+    Entrar con Google
+  </button>
+  <div class="login-footer">Tus datos se sincronizan en todos tus dispositivos</div>
 </div>
 
 <!-- ═══════════════════════════════ -->
-<!-- DÍA B -->
+<!-- APP -->
 <!-- ═══════════════════════════════ -->
-<div id="guia-b" class="page">
-<div class="sec-label">Día B — Viernes · Pull + Push vertical + Piernas completas</div>
-<div class="grid">
+<div id="app-screen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>GimnasioRutina</h1>
+      <p>Plan de Entrenamiento IA 2025</p>
+    </div>
+    <div class="user-area">
+      <img id="user-avatar" class="user-avatar" src="" alt="avatar">
+      <button class="btn-logout" onclick="logout()">Salir</button>
+    </div>
+  </div>
+  <div class="nav">
+    <div class="nav-btn active" onclick="showPage('guia-a',this)">Día A</div>
+    <div class="nav-btn" onclick="showPage('guia-b',this)">Día B</div>
+    <div class="nav-btn" onclick="showPage('registro',this)">Registrar</div>
+    <div class="nav-btn" onclick="showPage('historial',this)">Historial</div>
+  </div>
 
-<!-- 1. REMO MÁQUINA -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <use href="#body-back"/>
-      <!-- dorsal izq -->
-      <path d="M38,48 Q28,58 30,82 Q36,88 46,88 L46,58 Z" fill="#e03030" opacity=".9"/>
-      <!-- dorsal der -->
-      <path d="M82,48 Q92,58 90,82 Q84,88 74,88 L74,58 Z" fill="#e03030" opacity=".9"/>
-      <!-- trapecio medio + romboides -->
-      <path d="M44,38 Q60,42 76,38 Q74,56 60,60 Q46,56 44,38 Z" fill="#c02020" opacity=".85"/>
-      <!-- deltoides posterior izq sec -->
-      <path d="M17,36 Q14,44 18,52 Q24,50 28,44 Q28,36 24,34 Z" fill="#e03030" opacity=".5"/>
-      <!-- deltoides posterior der sec -->
-      <path d="M103,36 Q106,44 102,52 Q96,50 92,44 Q92,36 96,34 Z" fill="#e03030" opacity=".5"/>
-      <!-- bíceps izq sec -->
-      <path d="M18,52 Q14,60 15,68 L22,68 Q24,60 28,52 Z" fill="#e03030" opacity=".4"/>
-      <!-- bíceps der sec -->
-      <path d="M102,52 Q106,60 105,68 L98,68 Q96,60 92,52 Z" fill="#e03030" opacity=".4"/>
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">dorsal · romboides · trapecio</text>
-    </svg>
+  <!-- DÍA A -->
+  <div id="guia-a" class="page active">
+  <div class="sec-label">Día A — Lunes · Push + Tracción vertical + Core</div>
+  <div class="grid">
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <path d="M38,45 Q28,55 30,80 Q35,88 46,90 L46,55 Z" fill="#e03030" opacity=".9"/>
+        <path d="M82,45 Q92,55 90,80 Q85,88 74,90 L74,55 Z" fill="#e03030" opacity=".9"/>
+        <path d="M44,38 Q60,42 76,38 Q72,52 60,55 Q48,52 44,38 Z" fill="#c02020" opacity=".85"/>
+        <path d="M18,50 Q14,58 15,68 L22,68 Q24,58 28,50 Z" fill="#e03030" opacity=".5"/>
+        <path d="M102,50 Q106,58 105,68 L98,68 Q96,58 92,50 Z" fill="#e03030" opacity=".5"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">dorsal · romboides</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Dominadas</div>
+      <div class="badges"><span class="badge bab">Día A + B</span><span class="badge btipo">Tracción vertical</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Dorsal ancho, romboides<br><strong>Secundario:</strong> Bíceps, core</div>
+      <div class="tip">Rango completo. Pausa 1 seg arriba. Sin balanceo.</div>
+      <div class="peso">3 × 6–10 · Peso corporal</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=UT57qqp3zF8" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
   </div>
-  <div class="card-inner">
-    <div class="card-name">Remo en máquina</div>
-    <div class="badges"><span class="badge bb">Día B</span><span class="badge btipo">Tracción horizontal</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Dorsal ancho, romboides, trapecio<br><strong>Secundario:</strong> Bíceps, deltoides posterior</div>
-    <div class="tip">Tirá con los codos, no con las manos. Escápulas al centro.</div>
-    <div class="peso">3 × 10–12 · 50 kg base</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=VWyhefUKTp4" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <path d="M38,35 Q30,40 30,58 Q38,62 55,60 L55,35 Z" fill="#e03030" opacity=".9"/>
+        <path d="M82,35 Q90,40 90,58 Q82,62 65,60 L65,35 Z" fill="#e03030" opacity=".9"/>
+        <ellipse cx="27" cy="38" rx="8" ry="10" fill="#e03030" opacity=".45"/>
+        <ellipse cx="93" cy="38" rx="8" ry="10" fill="#e03030" opacity=".45"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">pectoral mayor</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Press de pecho en máquina</div>
+      <div class="badges"><span class="badge ba">Día A</span><span class="badge btipo">Empuje horizontal</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Pectoral mayor<br><strong>Secundario:</strong> Deltoides anterior, tríceps</div>
+      <div class="tip">Inspirá al bajar, expirá al empujar. No bloquees codos.</div>
+      <div class="peso">3 × 10–12 · 55 kg base</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=d-gwsl5BlMQ" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
   </div>
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="14" fill="#e03030" opacity=".9"/>
+        <ellipse cx="93" cy="40" rx="10" ry="14" fill="#e03030" opacity=".9"/>
+        <path d="M44,28 Q60,24 76,28 Q72,36 60,38 Q48,36 44,28 Z" fill="#e03030" opacity=".7"/>
+        <path d="M18,52 Q15,62 16,70 L22,70 Q23,62 26,52 Z" fill="#e03030" opacity=".4"/>
+        <path d="M102,52 Q105,62 104,70 L98,70 Q97,62 94,52 Z" fill="#e03030" opacity=".4"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">deltoides anterior y medio</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Press de hombros en máquina</div>
+      <div class="badges"><span class="badge ba">Día A</span><span class="badge btipo">Empuje vertical</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Deltoides anterior y medio<br><strong>Secundario:</strong> Tríceps, trapecio</div>
+      <div class="tip">No bloquees codos arriba. Control en la bajada.</div>
+      <div class="peso">3 × 10–12 · 30 kg base</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=279lKY6gi5o" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <path d="M38,45 Q28,58 30,82 Q36,88 46,88 L46,55 Z" fill="#e03030" opacity=".9"/>
+        <path d="M82,45 Q92,58 90,82 Q84,88 74,88 L74,55 Z" fill="#e03030" opacity=".9"/>
+        <path d="M46,55 Q60,60 74,55 Q70,72 60,75 Q50,72 46,55 Z" fill="#c02020" opacity=".75"/>
+        <path d="M18,50 Q14,60 15,70 L22,70 Q24,60 28,50 Z" fill="#e03030" opacity=".6"/>
+        <path d="M102,50 Q106,60 105,70 L98,70 Q96,60 92,50 Z" fill="#e03030" opacity=".6"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">dorsal · trapecio inf.</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Jalón al pecho</div>
+      <div class="badges"><span class="badge ba">Día A</span><span class="badge btipo">Tracción vertical</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Dorsal ancho<br><strong>Secundario:</strong> Bíceps, romboides, trapecio inferior</div>
+      <div class="tip">Agarre neutro o supino. Escápulas abajo primero.</div>
+      <div class="peso">2 × 10–12 · 45 kg base</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=1JiNvChA0_Q" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,56 15,72 L22,72 Q24,56 28,50 Z" fill="#e03030" opacity=".9"/>
+        <path d="M102,50 Q106,56 105,72 L98,72 Q96,56 92,50 Z" fill="#e03030" opacity=".9"/>
+        <path d="M15,72 Q13,80 14,90 L21,90 Q22,80 22,72 Z" fill="#e03030" opacity=".45"/>
+        <path d="M105,72 Q107,80 106,90 L99,90 Q98,80 98,72 Z" fill="#e03030" opacity=".45"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">bíceps braquial</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Curl bíceps con mancuernas</div>
+      <div class="badges"><span class="badge ba">Día A</span><span class="badge btipo">Aislamiento</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Bíceps braquial<br><strong>Secundario:</strong> Braquial, braquiorradial</div>
+      <div class="tip">Alterno. No balancees el torso. Codo fijo.</div>
+      <div class="peso">2 × 10–12 · 9 kg por lado</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=MwhnGYwxkS0" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <path d="M46,60 Q46,96 50,96 L70,96 Q74,96 74,60 Q66,64 60,64 Q54,64 46,60 Z" fill="#e03030" opacity=".9"/>
+        <line x1="60" y1="62" x2="60" y2="96" stroke="#1a1a2e" stroke-width="1.5"/>
+        <line x1="48" y1="72" x2="72" y2="72" stroke="#1a1a2e" stroke-width="1"/>
+        <line x1="47" y1="82" x2="73" y2="82" stroke="#1a1a2e" stroke-width="1"/>
+        <path d="M38,62 Q34,72 36,88 L46,85 L46,62 Z" fill="#e03030" opacity=".45"/>
+        <path d="M82,62 Q86,72 84,88 L74,85 L74,62 Z" fill="#e03030" opacity=".45"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">recto abdominal · oblicuos</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Abdominales (crunch)</div>
+      <div class="badges"><span class="badge ba">Día A</span><span class="badge btipo">Core</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Recto abdominal<br><strong>Secundario:</strong> Oblicuos, transverso</div>
+      <div class="tip">Movimiento controlado. No jalés el cuello.</div>
+      <div class="peso">2–3 × 12–15</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=Xyd_fa5zoEU" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <path d="M17,35 Q14,42 18,52 Q22,54 30,48 Q30,36 26,33 Z" fill="#e03030" opacity=".9"/>
+        <path d="M103,35 Q106,42 102,52 Q98,54 90,48 Q90,36 94,33 Z" fill="#e03030" opacity=".9"/>
+        <path d="M44,35 Q60,38 76,35 Q74,48 60,52 Q46,48 44,35 Z" fill="#e03030" opacity=".85"/>
+        <path d="M48,52 Q60,56 72,52 Q70,62 60,65 Q50,62 48,52 Z" fill="#c02020" opacity=".7"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">deltoides post. · trapecio</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Face pull en polea (cuerda)</div>
+      <div class="badges"><span class="badge bab">Día A + B</span><span class="badge bprev">Prevención</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Deltoides posterior, trapecio medio<br><strong>Secundario:</strong> Manguito rotador, romboides</div>
+      <div class="tip">Polea alta con cuerda. Tirá hacia tu cara con codos abiertos.</div>
+      <div class="peso">2 × 15 · Peso liviano · Preventivo</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=MiCj0SB5xyg" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
+  </div>
+
+  </div>
+  </div>
+
+  <!-- DÍA B -->
+  <div id="guia-b" class="page">
+  <div class="sec-label">Día B — Viernes · Pull + Push vertical + Piernas completas</div>
+  <div class="grid">
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <path d="M38,48 Q28,58 30,82 Q36,88 46,88 L46,58 Z" fill="#e03030" opacity=".9"/>
+        <path d="M82,48 Q92,58 90,82 Q84,88 74,88 L74,58 Z" fill="#e03030" opacity=".9"/>
+        <path d="M44,38 Q60,42 76,38 Q74,56 60,60 Q46,56 44,38 Z" fill="#c02020" opacity=".85"/>
+        <path d="M17,36 Q14,44 18,52 Q24,50 28,44 Q28,36 24,34 Z" fill="#e03030" opacity=".5"/>
+        <path d="M103,36 Q106,44 102,52 Q96,50 92,44 Q92,36 96,34 Z" fill="#e03030" opacity=".5"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">dorsal · romboides · trapecio</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Remo en máquina</div>
+      <div class="badges"><span class="badge bb">Día B</span><span class="badge btipo">Tracción horizontal</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Dorsal ancho, romboides, trapecio<br><strong>Secundario:</strong> Bíceps, deltoides posterior</div>
+      <div class="tip">Tirá con los codos. Escápulas al centro al final.</div>
+      <div class="peso">3 × 10–12 · 50 kg base</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=VWyhefUKTp4" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <path d="M38,45 Q28,55 30,80 Q35,88 46,90 L46,55 Z" fill="#e03030" opacity=".9"/>
+        <path d="M82,45 Q92,55 90,80 Q85,88 74,90 L74,55 Z" fill="#e03030" opacity=".9"/>
+        <path d="M18,48 Q14,56 15,72 L22,72 Q24,56 28,48 Z" fill="#e03030" opacity=".8"/>
+        <path d="M102,48 Q106,56 105,72 L98,72 Q96,56 92,48 Z" fill="#e03030" opacity=".8"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">dorsal · bíceps (supino)</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Dominadas — agarre supino</div>
+      <div class="badges"><span class="badge bb">Día B</span><span class="badge btipo">Tracción vertical</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Dorsal ancho, bíceps<br><strong>Secundario:</strong> Core, romboides</div>
+      <div class="tip">Palmas hacia vos. Misma calidad que Día A.</div>
+      <div class="peso">3 × 6–10 · Peso corporal</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=ICQoykUbkWk" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <path d="M36,90 Q30,100 32,112 L48,112 Q46,100 46,90 Z" fill="#e03030" opacity=".9"/>
+        <path d="M84,90 Q90,100 88,112 L72,112 Q74,100 74,90 Z" fill="#e03030" opacity=".9"/>
+        <path d="M32,112 Q29,125 30,138 L44,138 Q44,125 48,112 Z" fill="#e03030" opacity=".8"/>
+        <path d="M88,112 Q91,125 90,138 L76,138 Q76,125 72,112 Z" fill="#e03030" opacity=".8"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">glúteo · femoral posterior</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Prensa pies altos</div>
+      <div class="badges"><span class="badge bb">Día B</span><span class="badge btipo">Compuesto piernas</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Glúteo mayor, femoral posterior<br><strong>Secundario:</strong> Cuádriceps, aductores</div>
+      <div class="tip">Pies altos y separados. No bloquees rodillas.</div>
+      <div class="peso">3 × 10–12 · 80 kg base</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=ccDlOeZ90hs" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,110 30,130 L44,130 Q45,110 46,96 Z" fill="#e03030" opacity=".9"/>
+        <path d="M84,96 Q90,110 90,130 L76,130 Q75,110 74,96 Z" fill="#e03030" opacity=".9"/>
+        <path d="M30,130 Q28,140 30,150 L44,150 Q44,140 44,130 Z" fill="#e03030" opacity=".45"/>
+        <path d="M90,130 Q92,140 90,150 L76,150 Q76,140 76,130 Z" fill="#e03030" opacity=".45"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">isquiotibiales</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Curl femoral en máquina</div>
+      <div class="badges"><span class="badge bb">Día B</span><span class="badge btipo">Aislamiento</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Isquiotibiales<br><strong>Secundario:</strong> Gastrocnemio, poplíteo</div>
+      <div class="tip">Bajada lenta 2–3 seg. Sin rebote al fondo.</div>
+      <div class="peso">2 × 12 · 25 kg base</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=EAq2oJn9URk" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <path d="M16,34 Q12,42 16,52 Q22,54 28,48 Q28,36 24,32 Z" fill="#e03030" opacity=".9"/>
+        <path d="M104,34 Q108,42 104,52 Q98,54 92,48 Q92,36 96,32 Z" fill="#e03030" opacity=".9"/>
+        <path d="M28,34 Q24,40 26,48 Q30,48 34,44 Q34,36 30,34 Z" fill="#e03030" opacity=".4"/>
+        <path d="M92,34 Q96,40 94,48 Q90,48 86,44 Q86,36 90,34 Z" fill="#e03030" opacity=".4"/>
+        <path d="M48,28 Q60,24 72,28 Q68,34 60,36 Q52,34 48,28 Z" fill="#e03030" opacity=".35"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">deltoides medio</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Elevaciones laterales en máquina</div>
+      <div class="badges"><span class="badge bb">Día B</span><span class="badge btipo">Aislamiento</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Deltoides medio<br><strong>Secundario:</strong> Deltoides anterior, trapecio</div>
+      <div class="tip">No superes la altura del hombro. Codos levemente flexionados.</div>
+      <div class="peso">2 × 10–12 · 15 kg base</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=b6KtNTSHA54" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <path d="M42,62 Q42,96 48,96 L72,96 Q78,96 78,62 Q68,67 60,67 Q52,67 42,62 Z" fill="#e03030" opacity=".85"/>
+        <path d="M36,64 Q32,74 34,90 L44,88 L44,64 Z" fill="#e03030" opacity=".7"/>
+        <path d="M84,64 Q88,74 86,90 L76,88 L76,64 Z" fill="#e03030" opacity=".7"/>
+        <path d="M38,90 Q34,100 36,108 L50,108 L50,90 Z" fill="#e03030" opacity=".35"/>
+        <path d="M82,90 Q86,100 84,108 L70,108 L70,90 Z" fill="#e03030" opacity=".35"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">core profundo · oblicuos</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Plancha</div>
+      <div class="badges"><span class="badge bb">Día B</span><span class="badge btipo">Core isométrico</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Transverso abdominal, core profundo<br><strong>Secundario:</strong> Glúteos, hombros, erectores</div>
+      <div class="tip">Cuerpo en línea recta. Sem 5–6: plancha con toque de hombros.</div>
+      <div class="peso">2 × 30–40 seg</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=d0atctiI7Vw" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-muscle">
+      <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="14" rx="11" ry="13" fill="#3a3a4a"/>
+        <rect x="55" y="25" width="10" height="8" rx="2" fill="#3a3a4a"/>
+        <path d="M38,33 Q30,38 29,60 L29,90 Q29,95 38,96 L82,96 Q91,95 91,90 L91,60 Q90,38 82,33 Z" fill="#3a3a4a"/>
+        <ellipse cx="27" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <ellipse cx="93" cy="40" rx="10" ry="13" fill="#3a3a4a"/>
+        <path d="M18,50 Q14,55 15,72 L22,72 Q24,55 28,50 Z" fill="#3a3a4a"/>
+        <path d="M102,50 Q106,55 105,72 L98,72 Q96,55 92,50 Z" fill="#3a3a4a"/>
+        <path d="M15,72 Q13,85 14,98 L21,98 Q22,85 22,72 Z" fill="#3a3a4a"/>
+        <path d="M105,72 Q107,85 106,98 L99,98 Q98,85 98,72 Z" fill="#3a3a4a"/>
+        <path d="M36,96 Q30,100 30,125 L44,125 Q45,100 46,96 Z" fill="#3a3a4a"/>
+        <path d="M84,96 Q90,100 90,125 L76,125 Q75,100 74,96 Z" fill="#3a3a4a"/>
+        <path d="M30,125 Q28,145 30,158 L44,158 Q44,145 44,125 Z" fill="#3a3a4a"/>
+        <path d="M90,125 Q92,145 90,158 L76,158 Q76,145 76,125 Z" fill="#3a3a4a"/>
+        <path d="M17,35 Q14,42 18,52 Q22,54 30,48 Q30,36 26,33 Z" fill="#e03030" opacity=".9"/>
+        <path d="M103,35 Q106,42 102,52 Q98,54 90,48 Q90,36 94,33 Z" fill="#e03030" opacity=".9"/>
+        <path d="M44,35 Q60,38 76,35 Q74,48 60,52 Q46,48 44,35 Z" fill="#e03030" opacity=".85"/>
+        <path d="M48,52 Q60,56 72,52 Q70,62 60,65 Q50,62 48,52 Z" fill="#c02020" opacity=".7"/>
+        <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">deltoides post. · trapecio</text>
+      </svg>
+    </div>
+    <div class="card-inner">
+      <div class="card-name">Face pull en polea (cuerda)</div>
+      <div class="badges"><span class="badge bab">Día A + B</span><span class="badge bprev">Prevención</span></div>
+      <div class="divider"></div>
+      <div class="muscles"><strong>Principal:</strong> Deltoides posterior, trapecio medio<br><strong>Secundario:</strong> Manguito rotador, romboides</div>
+      <div class="tip">Misma indicación que Día A. Polea alta, cuerda, codos abiertos.</div>
+      <div class="peso">2 × 15 · Peso liviano · Preventivo</div>
+      <a class="yt-btn" href="https://www.youtube.com/watch?v=MiCj0SB5xyg" target="_blank"><div class="yt-tri"></div>Ver técnica</a>
+    </div>
+  </div>
+
+  </div>
+  </div>
+
+  <!-- REGISTRO -->
+  <div id="registro" class="page">
+  <div class="info-box">Los datos se sincronizan automáticamente en todos tus dispositivos.</div>
+  <div class="reg-header">
+    <select id="reg-dia"><option value="A">Día A — Lunes</option><option value="B">Día B — Viernes</option></select>
+    <input type="date" id="reg-fecha">
+    <button class="btn-save" id="btn-guardar" onclick="guardarSesion()">Guardar</button>
+  </div>
+  <div id="reg-ejercicios"></div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div id="historial" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div class="sec-label" style="margin:0">Historial <span id="sync-status"></span></div>
+    <button class="btn-clear" onclick="limpiarHistorial()">Borrar todo</button>
+  </div>
+  <div id="hist-lista"></div>
+  </div>
+
+  <footer>GimnasioRutina · Victor H Mansilla Tamaro · 2025</footer>
 </div>
 
-<!-- 2. DOMINADAS SUPINO -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <use href="#body-back"/>
-      <!-- dorsal izq -->
-      <path d="M38,45 Q28,55 30,80 Q35,88 46,90 L46,55 Z" fill="#e03030" opacity=".9"/>
-      <!-- dorsal der -->
-      <path d="M82,45 Q92,55 90,80 Q85,88 74,90 L74,55 Z" fill="#e03030" opacity=".9"/>
-      <!-- bíceps izq más marcado (agarre supino) -->
-      <path d="M18,48 Q14,56 15,72 L22,72 Q24,56 28,48 Z" fill="#e03030" opacity=".8"/>
-      <!-- bíceps der más marcado -->
-      <path d="M102,48 Q106,56 105,72 L98,72 Q96,56 92,48 Z" fill="#e03030" opacity=".8"/>
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">dorsal · bíceps (supino)</text>
-    </svg>
-  </div>
-  <div class="card-inner">
-    <div class="card-name">Dominadas — agarre supino</div>
-    <div class="badges"><span class="badge bb">Día B</span><span class="badge btipo">Tracción vertical</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Dorsal ancho, bíceps<br><strong>Secundario:</strong> Core, romboides</div>
-    <div class="tip">Palmas hacia vos. Misma calidad de ejecución que Día A.</div>
-    <div class="peso">3 × 6–10 · Peso corporal</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=ICQoykUbkWk" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
-  </div>
-</div>
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-<!-- 3. PRENSA PIES ALTOS -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <use href="#body-front"/>
-      <!-- glúteo izq (parte baja torso) -->
-      <path d="M36,90 Q30,100 32,112 L48,112 Q46,100 46,90 Z" fill="#e03030" opacity=".9"/>
-      <!-- glúteo der -->
-      <path d="M84,90 Q90,100 88,112 L72,112 Q74,100 74,90 Z" fill="#e03030" opacity=".9"/>
-      <!-- femoral izq posterior (muslo) -->
-      <path d="M32,112 Q29,125 30,138 L44,138 Q44,125 48,112 Z" fill="#e03030" opacity=".8"/>
-      <!-- femoral der posterior -->
-      <path d="M88,112 Q91,125 90,138 L76,138 Q76,125 72,112 Z" fill="#e03030" opacity=".8"/>
-      <!-- cuádriceps izq secundario -->
-      <path d="M36,96 Q32,110 33,125 L44,125 Q44,110 46,96 Z" fill="#e03030" opacity=".4"/>
-      <!-- cuádriceps der secundario -->
-      <path d="M84,96 Q88,110 87,125 L76,125 Q76,110 74,96 Z" fill="#e03030" opacity=".4"/>
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">glúteo · femoral posterior</text>
-    </svg>
-  </div>
-  <div class="card-inner">
-    <div class="card-name">Prensa pies altos</div>
-    <div class="badges"><span class="badge bb">Día B</span><span class="badge btipo">Compuesto piernas</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Glúteo mayor, femoral posterior<br><strong>Secundario:</strong> Cuádriceps, aductores</div>
-    <div class="tip">Pies altos y separados. No bloquees rodillas al extender.</div>
-    <div class="peso">3 × 10–12 · 80 kg base</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=ccDlOeZ90hs" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
-  </div>
-</div>
+const firebaseConfig = {
+  apiKey: "AIzaSyBtWc6sUYvwJTcCyPiSaGmtkB3zuRlgOUc",
+  authDomain: "gimnasiorutina.firebaseapp.com",
+  projectId: "gimnasiorutina",
+  storageBucket: "gimnasiorutina.firebasestorage.app",
+  messagingSenderId: "543270151152",
+  appId: "1:543270151152:web:4d40e4ad7e3524df4a3335"
+};
 
-<!-- 4. CURL FEMORAL -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <use href="#body-back"/>
-      <!-- isquiotibiales izq -->
-      <path d="M36,96 Q30,110 30,130 L44,130 Q45,110 46,96 Z" fill="#e03030" opacity=".9"/>
-      <!-- isquiotibiales der -->
-      <path d="M84,96 Q90,110 90,130 L76,130 Q75,110 74,96 Z" fill="#e03030" opacity=".9"/>
-      <!-- gastrocnemio izq sec -->
-      <path d="M30,130 Q28,140 30,150 L44,150 Q44,140 44,130 Z" fill="#e03030" opacity=".45"/>
-      <!-- gastrocnemio der sec -->
-      <path d="M90,130 Q92,140 90,150 L76,150 Q76,140 76,130 Z" fill="#e03030" opacity=".45"/>
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">isquiotibiales</text>
-    </svg>
-  </div>
-  <div class="card-inner">
-    <div class="card-name">Curl femoral en máquina</div>
-    <div class="badges"><span class="badge bb">Día B</span><span class="badge btipo">Aislamiento</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Isquiotibiales<br><strong>Secundario:</strong> Gastrocnemio, poplíteo</div>
-    <div class="tip">Bajada lenta 2–3 seg. Sin rebote al fondo.</div>
-    <div class="peso">2 × 12 · 25 kg base</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=EAq2oJn9URk" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
-  </div>
-</div>
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
-<!-- 5. ELEVACIONES LATERALES -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <use href="#body-front"/>
-      <!-- deltoides medio izq -->
-      <path d="M16,34 Q12,42 16,52 Q22,54 28,48 Q28,36 24,32 Z" fill="#e03030" opacity=".9"/>
-      <!-- deltoides medio der -->
-      <path d="M104,34 Q108,42 104,52 Q98,54 92,48 Q92,36 96,32 Z" fill="#e03030" opacity=".9"/>
-      <!-- deltoides anterior sec -->
-      <path d="M28,34 Q24,40 26,48 Q30,48 34,44 Q34,36 30,34 Z" fill="#e03030" opacity=".4"/>
-      <path d="M92,34 Q96,40 94,48 Q90,48 86,44 Q86,36 90,34 Z" fill="#e03030" opacity=".4"/>
-      <!-- trapecio superior sec -->
-      <path d="M48,28 Q60,24 72,28 Q68,34 60,36 Q52,34 48,28 Z" fill="#e03030" opacity=".35"/>
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">deltoides medio</text>
-    </svg>
-  </div>
-  <div class="card-inner">
-    <div class="card-name">Elevaciones laterales en máquina</div>
-    <div class="badges"><span class="badge bb">Día B</span><span class="badge btipo">Aislamiento</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Deltoides medio<br><strong>Secundario:</strong> Deltoides anterior, trapecio superior</div>
-    <div class="tip">No superes la altura del hombro. Codos levemente flexionados.</div>
-    <div class="peso">2 × 10–12 · 15 kg base</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=b6KtNTSHA54" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
-  </div>
-</div>
+let currentUser = null;
 
-<!-- 6. PLANCHA -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <use href="#body-front"/>
-      <!-- transverso / core profundo (zona central) -->
-      <path d="M42,62 Q42,96 48,96 L72,96 Q78,96 78,62 Q68,67 60,67 Q52,67 42,62 Z" fill="#e03030" opacity=".85"/>
-      <!-- oblicuos -->
-      <path d="M36,64 Q32,74 34,90 L44,88 L44,64 Z" fill="#e03030" opacity=".7"/>
-      <path d="M84,64 Q88,74 86,90 L76,88 L76,64 Z" fill="#e03030" opacity=".7"/>
-      <!-- glúteos sec -->
-      <path d="M38,90 Q34,100 36,108 L50,108 L50,90 Z" fill="#e03030" opacity=".35"/>
-      <path d="M82,90 Q86,100 84,108 L70,108 L70,90 Z" fill="#e03030" opacity=".35"/>
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">core profundo · oblicuos</text>
-    </svg>
-  </div>
-  <div class="card-inner">
-    <div class="card-name">Plancha</div>
-    <div class="badges"><span class="badge bb">Día B</span><span class="badge btipo">Core isométrico</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Transverso abdominal, core profundo<br><strong>Secundario:</strong> Glúteos, hombros, erectores</div>
-    <div class="tip">Cuerpo en línea recta. Sem 5–6: plancha con toque de hombros.</div>
-    <div class="peso">2 × 30–40 seg</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=d0atctiI7Vw" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
-  </div>
-</div>
-
-<!-- 7. FACE PULL DÍA B -->
-<div class="card">
-  <div class="card-muscle">
-    <svg viewBox="0 0 120 170" xmlns="http://www.w3.org/2000/svg">
-      <use href="#body-back"/>
-      <path d="M17,35 Q14,42 18,52 Q22,54 30,48 Q30,36 26,33 Z" fill="#e03030" opacity=".9"/>
-      <path d="M103,35 Q106,42 102,52 Q98,54 90,48 Q90,36 94,33 Z" fill="#e03030" opacity=".9"/>
-      <path d="M44,35 Q60,38 76,35 Q74,48 60,52 Q46,48 44,35 Z" fill="#e03030" opacity=".85"/>
-      <path d="M48,52 Q60,56 72,52 Q70,62 60,65 Q50,62 48,52 Z" fill="#c02020" opacity=".7"/>
-      <text x="60" y="165" text-anchor="middle" font-size="8" fill="#ff6b6b" font-weight="bold">deltoides post. · trapecio</text>
-    </svg>
-  </div>
-  <div class="card-inner">
-    <div class="card-name">Face pull en polea (cuerda)</div>
-    <div class="badges"><span class="badge bab">Día A + B</span><span class="badge bprev">Prevención</span></div>
-    <div class="divider"></div>
-    <div class="muscles"><strong>Principal:</strong> Deltoides posterior, trapecio medio<br><strong>Secundario:</strong> Manguito rotador, romboides</div>
-    <div class="tip">Misma indicación que Día A. Polea alta, cuerda, codos abiertos.</div>
-    <div class="peso">2 × 15 · Peso liviano · Preventivo</div>
-    <a class="yt-btn" href="https://www.youtube.com/watch?v=MiCj0SB5xyg" target="_blank"><div class="yt-tri"></div>Ver técnica en YouTube</a>
-  </div>
-</div>
-
-</div>
-</div>
-
-<!-- ═══════════════════════════════ -->
-<!-- REGISTRO -->
-<!-- ═══════════════════════════════ -->
-<div id="registro" class="page">
-<div class="info-box">Completá los pesos usados en cada ejercicio. Los datos se guardan en este dispositivo aunque cerrés el archivo.</div>
-<div class="reg-header">
-  <select id="reg-dia">
-    <option value="A">Día A — Lunes</option>
-    <option value="B">Día B — Viernes</option>
-  </select>
-  <input type="date" id="reg-fecha">
-  <button class="btn-save" onclick="guardarSesion()">Guardar sesión</button>
-</div>
-<div id="reg-ejercicios"></div>
-</div>
-
-<!-- ═══════════════════════════════ -->
-<!-- HISTORIAL -->
-<!-- ═══════════════════════════════ -->
-<div id="historial" class="page">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-  <div class="sec-label" style="margin:0">Historial de sesiones</div>
-  <button class="btn-clear" onclick="limpiarHistorial()">Borrar todo</button>
-</div>
-<div id="hist-lista"></div>
-</div>
-
-<footer>Victor H Mansilla Tamaro · Plan de Entrenamiento IA 2025 · Los datos se guardan localmente en este dispositivo</footer>
-
-<script>
-const EJ={
+const EJ = {
   A:[
     {nombre:"Dominadas",series:3,placeholder:"reps (ej: 8)"},
     {nombre:"Press pecho máquina",series:3,placeholder:"kg (ej: 55)"},
@@ -597,81 +692,168 @@ const EJ={
   ]
 };
 
-function showPage(id,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+window.loginGoogle = async () => {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch(e) {
+    alert('Error al iniciar sesión: ' + e.message);
+  }
+};
+
+window.logout = async () => {
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  if (user) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-screen').style.display = 'block';
+    document.getElementById('user-avatar').src = user.photoURL || '';
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app-screen').style.display = 'none';
+  }
+});
+
+window.showPage = (id, el) => {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   el.classList.add('active');
-  if(id==='registro')renderRegistro();
-  if(id==='historial')renderHistorial();
-}
+  if (id === 'registro') renderRegistro();
+  if (id === 'historial') renderHistorial();
+};
 
-function renderRegistro(){
-  const dia=document.getElementById('reg-dia').value;
-  const cont=document.getElementById('reg-ejercicios');
-  cont.innerHTML='';
-  EJ[dia].forEach((ej,ei)=>{
-    let html=`<div class="ej-reg"><div class="ej-reg-name">${ej.nombre}</div>`;
-    for(let s=1;s<=ej.series;s++){
-      html+=`<div class="series-row"><span class="series-label">Serie ${s}</span><input class="series-input" type="text" id="ej${ei}_s${s}" placeholder="${ej.placeholder}"></div>`;
+window.renderRegistro = () => {
+  const dia = document.getElementById('reg-dia').value;
+  const cont = document.getElementById('reg-ejercicios');
+  cont.innerHTML = '';
+  EJ[dia].forEach((ej, ei) => {
+    let html = `<div class="ej-reg"><div class="ej-reg-name">${ej.nombre}</div>`;
+    for (let s = 1; s <= ej.series; s++) {
+      html += `<div class="series-row"><span class="series-label">Serie ${s}</span><input class="series-input" type="text" id="ej${ei}_s${s}" placeholder="${ej.placeholder}"></div>`;
     }
-    html+=`<input class="nota-input" type="text" id="ej${ei}_nota" placeholder="Nota opcional..."></div>`;
-    cont.innerHTML+=html;
+    html += `<input class="nota-input" type="text" id="ej${ei}_nota" placeholder="Nota opcional..."></div>`;
+    cont.innerHTML += html;
   });
-}
+};
 
-document.getElementById('reg-dia').addEventListener('change',renderRegistro);
-document.getElementById('reg-fecha').valueAsDate=new Date();
+document.getElementById('reg-dia').addEventListener('change', window.renderRegistro);
+document.getElementById('reg-fecha').valueAsDate = new Date();
 
-function guardarSesion(){
-  const dia=document.getElementById('reg-dia').value;
-  const fecha=document.getElementById('reg-fecha').value;
-  if(!fecha){alert('Seleccioná la fecha primero');return;}
-  const ejercicios=EJ[dia].map((ej,ei)=>{
-    const series=[];
-    for(let s=1;s<=ej.series;s++){const v=document.getElementById(`ej${ei}_s${s}`).value.trim();if(v)series.push(v);}
-    const nota=document.getElementById(`ej${ei}_nota`).value.trim();
-    return{nombre:ej.nombre,series,nota};
-  }).filter(e=>e.series.length>0);
-  if(!ejercicios.length){alert('Completá al menos un ejercicio');return;}
-  const hist=JSON.parse(localStorage.getItem('gym_hist')||'[]');
-  hist.unshift({id:Date.now(),dia,fecha,ejercicios});
-  localStorage.setItem('gym_hist',JSON.stringify(hist));
-  alert('Sesión guardada');
-  renderRegistro();
-}
+window.guardarSesion = async () => {
+  if (!currentUser) return;
+  const dia = document.getElementById('reg-dia').value;
+  const fecha = document.getElementById('reg-fecha').value;
+  if (!fecha) { alert('Seleccioná la fecha'); return; }
 
-function renderHistorial(){
-  const hist=JSON.parse(localStorage.getItem('gym_hist')||'[]');
-  const cont=document.getElementById('hist-lista');
-  if(!hist.length){cont.innerHTML='<div class="empty">Todavía no hay sesiones registradas.</div>';return;}
-  cont.innerHTML=hist.map(s=>{
-    const fecha=new Date(s.fecha+'T12:00:00').toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
-    const ejHtml=s.ejercicios.map(e=>{
-      const series=e.series.map((v,i)=>`S${i+1}: <strong>${v}</strong>`).join(' · ');
-      const nota=e.nota?` — <em>${e.nota}</em>`:'';
-      return`<div class="hist-ej">${e.nombre}: ${series}${nota}</div>`;
-    }).join('');
-    return`<div class="hist-entry"><div class="hist-head"><span class="hist-dia">Día ${s.dia} · ${fecha}</span><button class="btn-del" onclick="borrarSesion(${s.id})">Borrar</button></div>${ejHtml}</div>`;
-  }).join('');
-}
+  const ejercicios = EJ[dia].map((ej, ei) => {
+    const series = [];
+    for (let s = 1; s <= ej.series; s++) {
+      const v = document.getElementById(`ej${ei}_s${s}`).value.trim();
+      if (v) series.push(v);
+    }
+    const nota = document.getElementById(`ej${ei}_nota`).value.trim();
+    return { nombre: ej.nombre, series, nota };
+  }).filter(e => e.series.length > 0);
 
-function borrarSesion(id){
-  if(!confirm('Borrar esta sesión?'))return;
-  let hist=JSON.parse(localStorage.getItem('gym_hist')||'[]');
-  hist=hist.filter(s=>s.id!==id);
-  localStorage.setItem('gym_hist',JSON.stringify(hist));
-  renderHistorial();
-}
+  if (!ejercicios.length) { alert('Completá al menos un ejercicio'); return; }
 
-function limpiarHistorial(){
-  if(!confirm('Borrar TODO el historial?'))return;
-  localStorage.removeItem('gym_hist');
-  renderHistorial();
-}
+  const btn = document.getElementById('btn-guardar');
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
 
-renderRegistro();
+  try {
+    await addDoc(collection(db, 'sesiones'), {
+      uid: currentUser.uid,
+      dia, fecha,
+      ejercicios,
+      createdAt: new Date()
+    });
+    alert('Sesión guardada y sincronizada');
+    window.renderRegistro();
+  } catch(e) {
+    alert('Error al guardar: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Guardar';
+  }
+};
+
+window.renderHistorial = async () => {
+  if (!currentUser) return;
+  const cont = document.getElementById('hist-lista');
+  cont.innerHTML = '<div class="empty">Cargando...</div>';
+
+  try {
+    const q = query(
+      collection(db, 'sesiones'),
+      where('uid', '==', currentUser.uid),
+      orderBy('createdAt', 'desc')
+    );
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      cont.innerHTML = '<div class="empty">Todavía no hay sesiones registradas.</div>';
+      return;
+    }
+
+    cont.innerHTML = '';
+    snap.forEach(docSnap => {
+      const s = docSnap.data();
+      const fecha = new Date(s.fecha + 'T12:00:00').toLocaleDateString('es-AR', {weekday:'long', day:'numeric', month:'long'});
+      const ejHtml = s.ejercicios.map(e => {
+        const series = e.series.map((v,i) => `S${i+1}: <strong>${v}</strong>`).join(' · ');
+        const nota = e.nota ? ` — <em>${e.nota}</em>` : '';
+        return `<div class="hist-ej">${e.nombre}: ${series}${nota}</div>`;
+      }).join('');
+
+      cont.innerHTML += `<div class="hist-entry">
+        <div class="hist-head">
+          <span class="hist-dia">Día ${s.dia} · ${fecha}</span>
+          <button class="btn-del" onclick="borrarSesion('${docSnap.id}')">Borrar</button>
+        </div>
+        ${ejHtml}
+      </div>`;
+    });
+
+    document.getElementById('sync-status').innerHTML = '<span class="sync-badge sync-ok">sincronizado</span>';
+  } catch(e) {
+    cont.innerHTML = '<div class="empty">Error al cargar. Verificá tu conexión.</div>';
+    document.getElementById('sync-status').innerHTML = '<span class="sync-badge sync-err">sin conexión</span>';
+  }
+};
+
+window.borrarSesion = async (id) => {
+  if (!confirm('Borrar esta sesión?')) return;
+  try {
+    await deleteDoc(doc(db, 'sesiones', id));
+    window.renderHistorial();
+  } catch(e) {
+    alert('Error al borrar: ' + e.message);
+  }
+};
+
+window.limpiarHistorial = async () => {
+  if (!confirm('Borrar TODO el historial?')) return;
+  if (!currentUser) return;
+  try {
+    const q = query(collection(db, 'sesiones'), where('uid', '==', currentUser.uid));
+    const snap = await getDocs(q);
+    await Promise.all(snap.docs.map(d => deleteDoc(doc(db, 'sesiones', d.id))));
+    window.renderHistorial();
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
+};
+
+window.renderRegistro();
 </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").then(()=>console.log("SW OK")).catch(e=>console.log("SW error",e))}</script>
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
 </body>
 </html>
