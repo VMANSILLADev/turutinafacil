@@ -83,6 +83,20 @@ body{font-family:Arial,sans-serif;background:#F1F5F9;color:#1E293B}
 .sync-ok{background:#E1F5EE;color:#085041}
 .sync-err{background:#FCEBEB;color:#A32D2D}
 footer{font-size:10px;color:#94A3B8;text-align:center;padding:16px 0 28px;line-height:1.8}
+.btn-registrar{display:flex;align-items:center;justify-content:center;gap:6px;background:#E6F1FB;color:#185FA5;border:none;border-radius:8px;padding:8px 14px;font-size:11px;font-weight:700;cursor:pointer;margin-top:6px;width:100%}
+.btn-registrar:hover,.btn-registrar.active{background:#185FA5;color:#fff}
+.card-reg-form{display:none;padding:10px 14px;border-top:.5px solid #E2E8F0;background:#F8FAFC}
+.card-reg-form.open{display:block}
+.card-reg-fecha{width:100%;font-size:11px;padding:6px 8px;border:.5px solid #CBD5E1;border-radius:6px;margin-bottom:8px;color:#1E293B}
+.card-reg-row{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+.card-reg-label{font-size:10px;color:#64748B;min-width:40px}
+.card-reg-input{flex:1;font-size:12px;padding:5px 8px;border:.5px solid #CBD5E1;border-radius:6px;text-align:center}
+.card-reg-input:focus{outline:none;border-color:#185FA5}
+.card-reg-nota{width:100%;font-size:11px;padding:5px 8px;border:.5px solid #E2E8F0;border-radius:6px;color:#64748B;margin-bottom:8px}
+.btn-guardar-card{width:100%;background:#185FA5;color:#fff;border:none;border-radius:8px;padding:8px;font-size:11px;font-weight:700;cursor:pointer}
+.btn-guardar-card:disabled{opacity:.5}
+.card-reg-ok{font-size:10px;color:#085041;text-align:center;padding:4px;display:none}
+.card-reg-ok.show{display:block}
 </style>
 </head>
 <body>
@@ -849,6 +863,125 @@ window.limpiarHistorial = async () => {
 };
 
 window.renderRegistro();
+
+// ─── REGISTRO INLINE EN CARDS ───
+const EJ_INFO = {
+  'Dominadas':               {series:3, placeholder:'reps (ej: 8)'},
+  'Press de pecho en máquina':{series:3, placeholder:'kg (ej: 55)'},
+  'Press de hombros en máquina':{series:3, placeholder:'kg (ej: 30)'},
+  'Jalón al pecho':          {series:2, placeholder:'kg (ej: 45)'},
+  'Curl bíceps con mancuernas':{series:2, placeholder:'kg (ej: 9)'},
+  'Abdominales (crunch)':    {series:3, placeholder:'reps (ej: 15)'},
+  'Face pull en polea (cuerda)':{series:2, placeholder:'kg (ej: 10)'},
+  'Remo en máquina':         {series:3, placeholder:'kg (ej: 50)'},
+  'Dominadas — agarre supino':{series:3, placeholder:'reps (ej: 8)'},
+  'Prensa pies altos':       {series:3, placeholder:'kg (ej: 80)'},
+  'Curl femoral en máquina': {series:2, placeholder:'kg (ej: 25)'},
+  'Elevaciones laterales en máquina':{series:2, placeholder:'kg (ej: 15)'},
+  'Plancha':                 {series:2, placeholder:'seg (ej: 35)'},
+};
+
+function getDia(cardEl) {
+  const page = cardEl.closest('.page');
+  return page && page.id === 'guia-b' ? 'B' : 'A';
+}
+
+function injectCardForms() {
+  document.querySelectorAll('.card').forEach((card, idx) => {
+    const nameEl = card.querySelector('.card-name');
+    if (!nameEl) return;
+    const nombre = nameEl.textContent.trim();
+    const info = EJ_INFO[nombre];
+    if (!info) return;
+
+    const uid = `card_${idx}`;
+
+    // Botón toggle
+    const btn = document.createElement('button');
+    btn.className = 'btn-registrar';
+    btn.id = `btn_${uid}`;
+    btn.innerHTML = '+ Registrar esta serie';
+    btn.onclick = () => toggleCardForm(uid);
+    card.querySelector('.card-inner').appendChild(btn);
+
+    // Formulario
+    const form = document.createElement('div');
+    form.className = 'card-reg-form';
+    form.id = `form_${uid}`;
+
+    let html = `<input type="date" class="card-reg-fecha" id="fecha_${uid}">`;
+    for (let s = 1; s <= info.series; s++) {
+      html += `<div class="card-reg-row">
+        <span class="card-reg-label">Serie ${s}</span>
+        <input class="card-reg-input" type="text" id="s${s}_${uid}" placeholder="${info.placeholder}">
+      </div>`;
+    }
+    html += `<input class="card-reg-nota" type="text" id="nota_${uid}" placeholder="Nota opcional...">
+      <button class="btn-guardar-card" id="save_${uid}" onclick="guardarCardEj('${uid}','${nombre}',${info.series})">Guardar</button>
+      <div class="card-reg-ok" id="ok_${uid}">Guardado</div>`;
+    form.innerHTML = html;
+
+    // Fecha hoy por defecto
+    const fechaInput = form.querySelector(`#fecha_${uid}`);
+    fechaInput.valueAsDate = new Date();
+
+    card.appendChild(form);
+  });
+}
+
+window.toggleCardForm = (uid) => {
+  const form = document.getElementById(`form_${uid}`);
+  const btn = document.getElementById(`btn_${uid}`);
+  const isOpen = form.classList.contains('open');
+  form.classList.toggle('open', !isOpen);
+  btn.classList.toggle('active', !isOpen);
+  btn.textContent = isOpen ? '+ Registrar esta serie' : '− Cerrar';
+};
+
+window.guardarCardEj = async (uid, nombre, numSeries) => {
+  if (!currentUser) { alert('Iniciá sesión primero'); return; }
+  const fecha = document.getElementById(`fecha_${uid}`).value;
+  if (!fecha) { alert('Seleccioná la fecha'); return; }
+
+  const series = [];
+  for (let s = 1; s <= numSeries; s++) {
+    const v = document.getElementById(`s${s}_${uid}`).value.trim();
+    if (v) series.push(v);
+  }
+  if (!series.length) { alert('Completá al menos una serie'); return; }
+  const nota = document.getElementById(`nota_${uid}`).value.trim();
+
+  const btn = document.getElementById(`save_${uid}`);
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
+
+  try {
+    await addDoc(collection(db, 'sesiones'), {
+      uid: currentUser.uid,
+      dia: getDia(document.getElementById(`form_${uid}`)),
+      fecha,
+      ejercicios: [{ nombre, series, nota }],
+      createdAt: new Date()
+    });
+    const ok = document.getElementById(`ok_${uid}`);
+    ok.textContent = '✓ Guardado y sincronizado';
+    ok.classList.add('show');
+    // limpiar inputs
+    for (let s = 1; s <= numSeries; s++) {
+      document.getElementById(`s${s}_${uid}`).value = '';
+    }
+    document.getElementById(`nota_${uid}`).value = '';
+    setTimeout(() => ok.classList.remove('show'), 3000);
+  } catch(e) {
+    alert('Error: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Guardar';
+  }
+};
+
+// Inyectar después de que el DOM esté listo
+setTimeout(injectCardForms, 100);
 </script>
 <script>
 if('serviceWorker' in navigator){
