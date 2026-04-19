@@ -145,11 +145,12 @@ footer{font-size:10px;color:#94A3B8;text-align:center;padding:16px 0 28px;line-h
 <div id="app-screen">
   <div class="topbar">
     <div class="topbar-left">
-      <h1 id="user-name">GimnasioRutina</h1>
-      <p>Versión <span id="app-version" style="color:#00A8E8;font-weight:700"></span></p>
+      <h1 id="user-name">Tu Rutina Fácil</h1>
+      <p>Versión <span id="app-version" style="color:#00A8E8;font-weight:700"></span> <span class="dias-msg" id="dias-msg"></span></p>
     </div>
     <div class="user-area">
-      <img id="user-avatar" class="user-avatar" src="" alt="avatar">
+      <button onclick="refrescarApp()" title="Refrescar app" style="background:none;border:1px solid #475569;color:#B8D4F0;border-radius:6px;padding:4px 8px;font-size:14px;cursor:pointer;line-height:1" title="Refrescar">↻</button>
+      <img id="user-avatar" class="user-avatar" src="" alt="avatar" style="display:none">
       <button class="btn-logout" onclick="logout()">Salir</button>
     </div>
   </div>
@@ -756,8 +757,12 @@ onAuthStateChanged(auth, user => {
   if (user) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app-screen').style.display = 'block';
-    document.getElementById('user-avatar').src = user.photoURL || '';
-    const nombre = user.displayName ? user.displayName.split(' ')[0] : 'GimnasioRutina';
+    const avatar = document.getElementById('user-avatar');
+    if (user.photoURL) {
+      avatar.src = user.photoURL;
+      avatar.style.display = 'block';
+    }
+    const nombre = user.displayName ? user.displayName.split(' ')[0] : 'Tu Rutina';
     document.getElementById('user-name').textContent = `Hola, ${nombre}`;
     registrarAcceso(user);
   } else {
@@ -765,6 +770,14 @@ onAuthStateChanged(auth, user => {
     document.getElementById('app-screen').style.display = 'none';
   }
 });
+
+window.refrescarApp = async () => {
+  if ('serviceWorker' in navigator) {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    for (let reg of regs) await reg.unregister();
+  }
+  window.location.reload(true);
+};
 
 async function registrarAcceso(user) {
   try {
@@ -788,11 +801,8 @@ async function registrarAcceso(user) {
     }
     // Mostrar mensaje
     const p = document.querySelector('.topbar-left p');
-    if (p) {
-      const versionSpan = p.querySelector('#app-version');
-      const versionText = versionSpan ? versionSpan.outerHTML : '';
-      p.innerHTML = `Plan IA 2025 · ${versionText} <span class="dias-msg">· ${diasMsg}</span>`;
-    }
+    const diasSpan = document.getElementById('dias-msg');
+    if (diasSpan) diasSpan.textContent = '· ' + diasMsg;
     // Guardar nuevo acceso
     await addDoc(collection(db, 'accesos'), {
       uid: user.uid,
