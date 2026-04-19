@@ -125,8 +125,8 @@ footer{font-size:10px;color:#94A3B8;text-align:center;padding:16px 0 28px;line-h
 <div id="app-screen">
   <div class="topbar">
     <div class="topbar-left">
-      <h1>GimnasioRutina</h1>
-      <p>Plan de Entrenamiento IA 2025 · <span style="color:#00A8E8;font-weight:700">v1.1</span></p>
+      <h1 id="user-name">GimnasioRutina</h1>
+      <p>Plan de Entrenamiento IA 2025 · <span style="color:#00A8E8;font-weight:700">v1.2</span></p>
     </div>
     <div class="user-area">
       <img id="user-avatar" class="user-avatar" src="" alt="avatar">
@@ -724,6 +724,8 @@ onAuthStateChanged(auth, user => {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app-screen').style.display = 'block';
     document.getElementById('user-avatar').src = user.photoURL || '';
+    const nombre = user.displayName ? user.displayName.split(' ')[0] : 'GimnasioRutina';
+    document.getElementById('user-name').textContent = `Hola, ${nombre}`;
   } else {
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app-screen').style.display = 'none';
