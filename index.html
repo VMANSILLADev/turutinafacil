@@ -97,6 +97,23 @@ footer{font-size:10px;color:#94A3B8;text-align:center;padding:16px 0 28px;line-h
 .btn-guardar-card:disabled{opacity:.5}
 .card-reg-ok{font-size:10px;color:#085041;text-align:center;padding:4px;display:none}
 .card-reg-ok.show{display:block}
+
+/* SEGUIMIENTO */
+.seg-card{background:#fff;border:.5px solid #E2E8F0;border-radius:12px;padding:14px;margin-bottom:12px}
+.seg-fecha{font-size:12px;font-weight:700;color:#0D1B40;margin-bottom:4px}
+.seg-dia-badge{font-size:9px;padding:2px 8px;border-radius:20px;font-weight:600;display:inline-block;margin-bottom:10px}
+.seg-cumpl-bar{height:8px;background:#E2E8F0;border-radius:4px;margin-bottom:10px;overflow:hidden}
+.seg-cumpl-fill{height:100%;border-radius:4px;transition:width .4s}
+.seg-cumpl-pct{font-size:11px;font-weight:700;margin-bottom:8px}
+.seg-ej{border-top:.5px solid #F1F5F9;padding:6px 0}
+.seg-ej-nombre{font-size:11px;font-weight:700;color:#0D1B40;margin-bottom:4px}
+.seg-ej-row{display:flex;justify-content:space-between;font-size:10px;color:#64748B;margin-bottom:2px}
+.seg-ej-row span:last-child{font-weight:600}
+.ok{color:#085041}.warn{color:#854F0B}.miss{color:#A32D2D}
+.metric-card{background:#fff;border:.5px solid #E2E8F0;border-radius:10px;padding:12px;text-align:center}
+.metric-val{font-size:22px;font-weight:700;color:#185FA5}
+.metric-label{font-size:10px;color:#64748B;margin-top:2px}
+.dias-msg{font-size:11px;color:#B8D4F0;margin-top:2px}
 </style>
 </head>
 <body>
@@ -126,7 +143,7 @@ footer{font-size:10px;color:#94A3B8;text-align:center;padding:16px 0 28px;line-h
   <div class="topbar">
     <div class="topbar-left">
       <h1 id="user-name">GimnasioRutina</h1>
-      <p>Plan de Entrenamiento IA 2025 · <span style="color:#00A8E8;font-weight:700">v1.2</span></p>
+      <p>Plan de Entrenamiento IA 2025 · <span id="app-version" style="color:#00A8E8;font-weight:700"></span></p>
     </div>
     <div class="user-area">
       <img id="user-avatar" class="user-avatar" src="" alt="avatar">
@@ -138,6 +155,7 @@ footer{font-size:10px;color:#94A3B8;text-align:center;padding:16px 0 28px;line-h
     <div class="nav-btn" onclick="showPage('guia-b',this)">Día B</div>
     <div class="nav-btn" onclick="showPage('registro',this)">Registrar</div>
     <div class="nav-btn" onclick="showPage('historial',this)">Historial</div>
+    <div class="nav-btn" onclick="showPage('seguimiento',this)">Seguimiento</div>
   </div>
 
   <!-- DÍA A -->
@@ -660,6 +678,18 @@ footer{font-size:10px;color:#94A3B8;text-align:center;padding:16px 0 28px;line-h
   <div id="hist-lista"></div>
   </div>
 
+  <!-- SEGUIMIENTO -->
+  <div id="seguimiento" class="page">
+  <div class="sec-label">Seguimiento del plan</div>
+  <div id="seg-carrusel" style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+    <button onclick="segCambiarMes(-1)" style="background:#E6F1FB;color:#185FA5;border:none;border-radius:8px;padding:8px 14px;font-size:16px;cursor:pointer">‹</button>
+    <span id="seg-mes-label" style="font-size:14px;font-weight:700;color:#0D1B40;flex:1;text-align:center"></span>
+    <button onclick="segCambiarMes(1)" style="background:#E6F1FB;color:#185FA5;border:none;border-radius:8px;padding:8px 14px;font-size:16px;cursor:pointer">›</button>
+  </div>
+  <div id="seg-resumen" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px"></div>
+  <div id="seg-lista"></div>
+  </div>
+
   <footer>GimnasioRutina · Victor H Mansilla Tamaro · 2025</footer>
 </div>
 
@@ -726,11 +756,201 @@ onAuthStateChanged(auth, user => {
     document.getElementById('user-avatar').src = user.photoURL || '';
     const nombre = user.displayName ? user.displayName.split(' ')[0] : 'GimnasioRutina';
     document.getElementById('user-name').textContent = `Hola, ${nombre}`;
+    registrarAcceso(user);
   } else {
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('app-screen').style.display = 'none';
   }
 });
+
+async function registrarAcceso(user) {
+  try {
+    // Buscar último acceso
+    const q = query(
+      collection(db, 'accesos'),
+      where('uid', '==', user.uid),
+      orderBy('fecha', 'desc')
+    );
+    const snap = await getDocs(q);
+    let diasMsg = '';
+    if (!snap.empty) {
+      const ultimo = snap.docs[0].data().fecha.toDate();
+      const hoy = new Date();
+      const dias = Math.floor((hoy - ultimo) / (1000*60*60*24));
+      if (dias === 0) diasMsg = 'Hoy ya entrenaste';
+      else if (dias === 1) diasMsg = 'Ayer fue tu última visita';
+      else diasMsg = `Hace ${dias} días que no te veíamos por acá`;
+    } else {
+      diasMsg = 'Bienvenido por primera vez';
+    }
+    // Mostrar mensaje
+    const p = document.querySelector('.topbar-left p');
+    if (p) {
+      const versionSpan = p.querySelector('#app-version');
+      const versionText = versionSpan ? versionSpan.outerHTML : '';
+      p.innerHTML = `Plan IA 2025 · ${versionText} <span class="dias-msg">· ${diasMsg}</span>`;
+    }
+    // Guardar nuevo acceso
+    await addDoc(collection(db, 'accesos'), {
+      uid: user.uid,
+      nombre: user.displayName || '',
+      email: user.email || '',
+      fecha: new Date(),
+      accion: 'login'
+    });
+  } catch(e) { console.log('acceso log error', e); }
+}
+
+// ─── SEGUIMIENTO ───
+const PLAN_BASE = {
+  A: [
+    {nombre:'Dominadas', series:3, pesoBase:0, unidad:'reps'},
+    {nombre:'Press pecho máquina', series:3, pesoBase:55, unidad:'kg'},
+    {nombre:'Press hombros máquina', series:3, pesoBase:30, unidad:'kg'},
+    {nombre:'Jalón al pecho', series:2, pesoBase:45, unidad:'kg'},
+    {nombre:'Curl bíceps mancuernas', series:2, pesoBase:9, unidad:'kg'},
+    {nombre:'Abdominales', series:3, pesoBase:0, unidad:'reps'},
+    {nombre:'Face pull en polea', series:2, pesoBase:10, unidad:'kg'},
+  ],
+  B: [
+    {nombre:'Remo en máquina', series:3, pesoBase:50, unidad:'kg'},
+    {nombre:'Dominadas agarre supino', series:3, pesoBase:0, unidad:'reps'},
+    {nombre:'Prensa pies altos', series:3, pesoBase:80, unidad:'kg'},
+    {nombre:'Curl femoral máquina', series:2, pesoBase:25, unidad:'kg'},
+    {nombre:'Elevaciones laterales', series:2, pesoBase:15, unidad:'kg'},
+    {nombre:'Plancha', series:2, pesoBase:0, unidad:'seg'},
+    {nombre:'Face pull en polea', series:2, pesoBase:10, unidad:'kg'},
+  ]
+};
+
+let segMesOffset = 0;
+
+window.segCambiarMes = (dir) => {
+  segMesOffset += dir;
+  renderSeguimiento();
+};
+
+window.renderSeguimiento = async () => {
+  if (!currentUser) return;
+  const hoy = new Date();
+  const fecha = new Date(hoy.getFullYear(), hoy.getMonth() + segMesOffset, 1);
+  const mes = fecha.toLocaleDateString('es-AR', {month:'long', year:'numeric'});
+  document.getElementById('seg-mes-label').textContent = mes.charAt(0).toUpperCase() + mes.slice(1);
+
+  const primerDia = new Date(fecha.getFullYear(), fecha.getMonth(), 1);
+  const ultimoDia = new Date(fecha.getFullYear(), fecha.getMonth()+1, 0);
+  const pStr = primerDia.toISOString().split('T')[0];
+  const uStr = ultimoDia.toISOString().split('T')[0];
+
+  const cont = document.getElementById('seg-lista');
+  cont.innerHTML = '<div class="empty">Cargando...</div>';
+
+  try {
+    const q = query(
+      collection(db, 'sesiones'),
+      where('uid', '==', currentUser.uid),
+      where('fecha', '>=', pStr),
+      where('fecha', '<=', uStr),
+      orderBy('fecha', 'desc')
+    );
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      cont.innerHTML = '<div class="empty">Sin sesiones registradas en este mes.</div>';
+      document.getElementById('seg-resumen').innerHTML = '';
+      return;
+    }
+
+    // Agrupar por fecha
+    const porFecha = {};
+    snap.forEach(d => {
+      const s = d.data();
+      if (!porFecha[s.fecha]) porFecha[s.fecha] = {dia: s.dia, ejercicios: []};
+      porFecha[s.fecha].ejercicios.push(...s.ejercicios);
+    });
+
+    // Métricas globales del mes
+    let totalSesiones = Object.keys(porFecha).length;
+    let sumaCumpl = 0;
+
+    cont.innerHTML = '';
+    Object.keys(porFecha).sort().reverse().forEach(fecha => {
+      const sesion = porFecha[fecha];
+      const plan = PLAN_BASE[sesion.dia] || PLAN_BASE.A;
+      const totalEjPlan = plan.length;
+      let ejCumplidos = 0;
+      let puntosTotal = 0, puntosCumplidos = 0;
+
+      let ejHtml = '';
+      plan.forEach(planEj => {
+        const registrado = sesion.ejercicios.find(e =>
+          e.nombre.toLowerCase().includes(planEj.nombre.toLowerCase().split(' ')[0])
+        );
+        const seriesPlan = planEj.series;
+        const seriesReales = registrado ? registrado.series.length : 0;
+        const pesoReal = registrado && registrado.series[0] ? parseFloat(registrado.series[0]) : 0;
+        const pesoBase = planEj.pesoBase;
+
+        // Puntos: 50% por series completadas, 50% por peso >= base (si aplica)
+        let pts = 0;
+        const pctSeries = Math.min(seriesReales / seriesPlan, 1);
+        pts += pctSeries * 50;
+        if (pesoBase > 0) {
+          const pctPeso = pesoReal >= pesoBase ? 1 : (pesoReal / pesoBase);
+          pts += pctPeso * 50;
+        } else {
+          pts += pctSeries * 50;
+        }
+        puntosTotal += 100;
+        puntosCumplidos += pts;
+        if (pts >= 80) ejCumplidos++;
+
+        const colorSeries = seriesReales >= seriesPlan ? 'ok' : seriesReales > 0 ? 'warn' : 'miss';
+        const colorPeso = pesoBase === 0 ? '' : pesoReal >= pesoBase ? 'ok' : pesoReal > 0 ? 'warn' : 'miss';
+
+        ejHtml += `<div class="seg-ej">
+          <div class="seg-ej-nombre">${planEj.nombre}</div>
+          <div class="seg-ej-row">
+            <span>Series</span>
+            <span class="${colorSeries}">${seriesReales}/${seriesPlan}</span>
+          </div>
+          ${pesoBase > 0 ? `<div class="seg-ej-row">
+            <span>Peso</span>
+            <span class="${colorPeso}">${pesoReal > 0 ? pesoReal : '—'} vs ${pesoBase} ${planEj.unidad}</span>
+          </div>` : ''}
+        </div>`;
+      });
+
+      const pctCumpl = Math.round(puntosCumplidos / puntosTotal * 100);
+      sumaCumpl += pctCumpl;
+      const colorBarra = pctCumpl >= 80 ? '#1D9E75' : pctCumpl >= 50 ? '#BA7517' : '#E24B4A';
+      const fechaLabel = new Date(fecha + 'T12:00:00').toLocaleDateString('es-AR', {weekday:'long', day:'numeric', month:'long'});
+
+      cont.innerHTML += `<div class="seg-card">
+        <div class="seg-fecha">${fechaLabel}</div>
+        <span class="seg-dia-badge ${sesion.dia === 'A' ? 'ba' : 'bb'}">Día ${sesion.dia}</span>
+        <div class="seg-cumpl-pct" style="color:${colorBarra}">Cumplimiento: ${pctCumpl}%</div>
+        <div class="seg-cumpl-bar"><div class="seg-cumpl-fill" style="width:${pctCumpl}%;background:${colorBarra}"></div></div>
+        ${ejHtml}
+      </div>`;
+    });
+
+    // Resumen del mes
+    const promCumpl = Math.round(sumaCumpl / totalSesiones);
+    document.getElementById('seg-resumen').innerHTML = `
+      <div class="metric-card">
+        <div class="metric-val">${totalSesiones}</div>
+        <div class="metric-label">Sesiones en el mes</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val" style="color:${promCumpl>=80?'#1D9E75':promCumpl>=50?'#BA7517':'#E24B4A'}">${promCumpl}%</div>
+        <div class="metric-label">Cumplimiento promedio</div>
+      </div>`;
+
+  } catch(e) {
+    cont.innerHTML = `<div class="empty">Error al cargar. ${e.message}</div>`;
+  }
+};
 
 window.showPage = (id, el) => {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -739,6 +959,7 @@ window.showPage = (id, el) => {
   el.classList.add('active');
   if (id === 'registro') renderRegistro();
   if (id === 'historial') renderHistorial();
+  if (id === 'seguimiento') renderSeguimiento();
 };
 
 window.renderRegistro = () => {
@@ -989,6 +1210,13 @@ setTimeout(injectCardForms, 100);
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
+fetch('version.json?t=' + Date.now())
+  .then(r => r.json())
+  .then(data => {
+    const el = document.getElementById('app-version');
+    if (el) el.textContent = 'v' + data.version;
+  })
+  .catch(() => {});
 </script>
 </body>
 </html>
