@@ -1,7 +1,7 @@
 {
-  "name": "Plan Entrenamiento - Victor Mansilla",
-  "short_name": "Gym Viti",
-  "description": "Plan de entrenamiento personal IA 2025",
+  "name": "Tu Rutina Fácil",
+  "short_name": "Tu Rutina",
+  "description": "Tu plan de entrenamiento personalizado",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0D1B40",
